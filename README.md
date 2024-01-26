@@ -38,16 +38,8 @@ When setting up the cluster, the aim is to ensure scalability, high availability
 - **Merging and Conflicts**: Prefer using pull requests for merging to facilitate code reviews. Resolve conflicts by merging the target branch into your feature branch and resolving locally.
 
 ## Running the CI/CD pipeline
-- Create the secret ```AZURE_CREDENTIALS```
+- Create [secrets](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux) to give Terraform permission to access your Azure account.
 
-```
-{
-  "clientId": "<appId>",
-  "clientSecret": "<password>",
-  "subscriptionId": "<subscription-id>",
-  "tenantId": "<tenant>"
-}
-```
 - I have 2 files ```ci.yaml``` and ```cd.yaml``` for continuous integration (setup infrastructure using terraform), and continuous deployment (update AKS cluster with services).
 I manage the order of workflow execution by setting up a dependency between the two workflow files using the ```workflow_run``` event in ```cd.yaml```.
 
