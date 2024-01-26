@@ -30,10 +30,10 @@ jobs:
       run: terraform init aks-cluster/**
 
     - name: Terraform Validate
-      run: terraform validate aks-cluster/**
+      run: terraform -chdir=aks-cluster/ init
 
     - name: Terraform Plan
-      run: terraform plan -out=tfplan aks-cluster/**
+      run: terraform -chdir=aks-cluster/ terraform plan -out=tfplan
 
     - name: Terraform Apply
-      run: terraform apply "tfplan"
+      run: terraform -chdir=aks-cluster/ apply "tfplan"

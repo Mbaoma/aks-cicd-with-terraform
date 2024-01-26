@@ -47,6 +47,8 @@ When setting up the cluster, the aim is to ensure scalability, high availability
   "subscriptionId": "<subscription-id>",
   "tenantId": "<tenant>"
 }
-
 ```
+- I have 2 files ```ci.yaml``` and ```cd.yaml``` for continuous integration (setup infrastructure using terraform), and continuous deployment (update AKS cluster with services).
+I manage the order of workflow execution by setting up a dependency between the two workflow files using the ```workflow_run``` event in ```cd.yaml```.
+
 ## Monitoring, logging, and RBAC setup,

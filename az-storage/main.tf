@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "lights_on_heights_sg" {
 
 # Create a storage container in the storage account
 resource "azurerm_storage_container" "lights_on_heights_sc" {
-  name                  = var.storage_account_name
+  name                  = var.storage_account_container
   storage_account_name  = azurerm_storage_account.lights_on_heights_sg.name
   container_access_type = "private"
 }

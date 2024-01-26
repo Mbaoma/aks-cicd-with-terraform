@@ -33,3 +33,9 @@ variable "storage_account_name" {
   default     = "l1ght5onhe1ghts"
   description = "Storage account name"
 }
+
+variable "storage_account_container" {
+  type        = string
+  default     = "l1ght5onhe1ghtsc0nta1ner"
+  description = "Storage account container name"
+}
