@@ -4,6 +4,5 @@ terraform {
     storage_account_name = "l1ght5onhe1ghts"
     container_name       = "l1ght5onhe1ghtsc0nta1ner"
     key                  = "aks-cluster/terraform.tfstate"
-    # use_oidc             = true
   }
 }
