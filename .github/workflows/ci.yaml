@@ -35,16 +35,16 @@ jobs:
 
     - name: Terraform Init
       run: terraform -chdir=aks-cluster/ init
-      with:
-        args: |
-          -backend-config=storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-          -backend-config=container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
-          -backend-config=key=${{ secrets.AZURE_STORAGE_KEY }}
-          -backend-config=resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
-          -backend-config=subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          -backend-config=tenant_id=${{ secrets.AZURE_TENANT_ID }}
-          -backend-config=client_id=${{ secrets.AZURE_CLIENT_ID }}
-          -backend-config=client_secret=${{ secrets.AZURE_CLIENT_SECRET }}
+      # with:
+      #   args: |
+      #     -backend-config=storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+      #     -backend-config=container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
+      #     -backend-config=key=${{ secrets.AZURE_STORAGE_KEY }}
+      #     -backend-config=resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP_NAME }}
+      #     -backend-config=subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #     -backend-config=tenant_id=${{ secrets.AZURE_TENANT_ID }}
+      #     -backend-config=client_id=${{ secrets.AZURE_CLIENT_ID }}
+      #     -backend-config=client_secret=${{ secrets.AZURE_CLIENT_SECRET }}
 
     - name: Terraform Validate
       run: terraform -chdir=aks-cluster/ validate
