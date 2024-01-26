@@ -1,6 +1,6 @@
 variable "name" {
   type        = string
-  default     = "lights-on-heights-24"
+  default     = "lights_on_heights_24"
   description = "Resource group name for my assessment"
 }
 

@@ -1,0 +1,38 @@
+# name: Continuous Deployment
+
+# on:
+#   workflow_run:
+#     workflows: ["Continuous Integration"]
+#     types:
+#       - completed
+
+# jobs:
+#   deploy:
+#     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
+
+#     - name: Build Docker image
+#       run: docker build -t microservice-a:${{ github.sha }} ./services/microservice-a
+
+#     - name: Push Docker image to Registry
+#       run: |
+#         echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+#         docker push microservice-a:${{ github.sha }}
+
+#     - name: Set up Kubectl
+#       uses: azure/setup-kubectl@v1
+
+#     - name: Login to Azure
+#       uses: azure/login@v1
+#       with:
+#         creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+#     - name: Set AKS context
+#       run: az aks get-credentials --resource-group <ResourceGroup> --name <ClusterName>
+
+#     - name: Deploy to AKS
+#       run: kubectl apply -f ./services/microservice-a/k8s/
+
