@@ -1,0 +1,10 @@
+#terraform
+az-storage-account/.terraform
+az-storage-account/.terraform.lock.hcl
+
+environments/prod/terraform.tfstate
+environments/prod/.terraform
+environments/prod/.terraform.lock.hcl
+
+modules/resource-group/.terraform
+modules/resource-group/.terraform.lock.hcl
