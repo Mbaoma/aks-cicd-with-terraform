@@ -7,6 +7,10 @@ on:
     paths:
     - 'aks-cluster/**'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: 'Terraform initialization'
