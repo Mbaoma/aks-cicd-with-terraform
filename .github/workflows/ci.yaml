@@ -27,10 +27,10 @@ jobs:
         terraform_version: 1.0.0
 
     - name: Terraform Init
-      run: terraform init aks-cluster/**
+      run: terraform -chdir=aks-cluster/ init
 
     - name: Terraform Validate
-      run: terraform -chdir=aks-cluster/ init
+      run: terraform -chdir=aks-cluster/ validate
 
     - name: Terraform Plan
       run: terraform -chdir=aks-cluster/ terraform plan -out=tfplan
