@@ -15,7 +15,7 @@ jobs:
   build:
     name: 'Terraform initialization'
     runs-on: ubuntu-latest
-    # environment: production
+    # environment: repo:Mbaoma/aks-cicd-with-terraform:ref:refs/heads/develop
 
     steps:
     - name: Checkout code
@@ -28,12 +28,12 @@ jobs:
 
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
       # with:
-      #   client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      #   tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      #   subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      # creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Terraform Init
       run: terraform -chdir=aks-cluster/ init
@@ -42,7 +42,7 @@ jobs:
       run: terraform -chdir=aks-cluster/ validate
 
     - name: Terraform Plan
-      run: terraform -chdir=aks-cluster/ terraform plan -out=tfplan
+      run: terraform -chdir=aks-cluster/ plan -out=tfplan
 
     - name: Terraform Apply
       run: terraform -chdir=aks-cluster/ apply "tfplan"
