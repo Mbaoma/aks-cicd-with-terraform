@@ -1,0 +1,39 @@
+name: 'Setup AKS Cluster using Terraform'
+
+on:
+  pull_request:
+    branches:
+    - develop
+    paths:
+    - 'aks-cluster/**'
+
+jobs:
+  build:
+    name: 'Terraform initialization'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
+
+    - name: Terraform Init
+      run: terraform init aks-cluster/**
+
+    - name: Terraform Validate
+      run: terraform validate aks-cluster/**
+
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan aks-cluster/**
+
+    - name: Terraform Apply
+      run: terraform apply "tfplan"
