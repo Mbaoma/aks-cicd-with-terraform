@@ -1,6 +1,6 @@
 variable "name_rg" {
   type        = string
-  default     = "lights_on_heights_24"
+  default     = "lights_on_heights_aks_rg"
   description = "Resource group name for my assessment"
 }
 
@@ -9,6 +9,7 @@ variable "location_rg" {
   default     = "eastus"
   description = "Azure region to deploy resources"
 }
+
 
 variable "vnet_name" {
   description = "Name of the virtual network"

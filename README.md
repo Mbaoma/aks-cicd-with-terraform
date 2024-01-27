@@ -17,6 +17,14 @@ $ az login
 ## Terraform Setup
 - Code is modularized.
 - Azure storage (blob) is used as backend for team collaboration, state locking, and state security.
+- The folder ```az-storage```, has its own resource group and is managed manually
+```
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
+- All other resources needed to create the AKS cluster, are located in a different resource group and managed by CI runs.
 
 ## Terraform setup for AKS
 When setting up the cluster, the aim is to ensure scalability, high availability, security, and best practices for cloud infrastructure management.
@@ -43,4 +51,7 @@ When setting up the cluster, the aim is to ensure scalability, high availability
 - I have 2 files ```ci.yaml``` and ```cd.yaml``` for continuous integration (setup infrastructure using terraform), and continuous deployment (update AKS cluster with services).
 I manage the order of workflow execution by setting up a dependency between the two workflow files using the ```workflow_run``` event in ```cd.yaml```.
 
-## Monitoring, logging, and RBAC setup,
+## Kubernetes Deployment
+
+## Challenges
+- I struggled with granting permission to Terraform to authenticate to Azure via GitHub actions

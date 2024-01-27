@@ -1,15 +1,13 @@
-#reference the resource group module
-module "resource_group" {
-  source   = "../modules/resource_group"
-  name     = var.name_rg
-  location = var.location_rg
+resource "azurerm_resource_group" "lights_on_heights_backend_rg" {
+  name     = var.name
+  location = var.location
 }
 
 # Create a storage account
 resource "azurerm_storage_account" "lights_on_heights_sg" {
     name                     = var.storage_account_name
-    resource_group_name      = module.resource_group.name 
-    location                 = module.resource_group.location 
+    resource_group_name      = azurerm_resource_group.lights_on_heights_backend_rg.name
+    location                 = azurerm_resource_group.lights_on_heights_backend_rg.location 
     account_tier             = var.account_tier
     account_replication_type = var.account_replication_type
     account_kind              = var.account_kind 

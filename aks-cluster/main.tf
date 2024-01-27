@@ -1,8 +1,6 @@
-# Resource Group Module Reference
-module "resource_group" {
-  source   = "../modules/resource_group"
-  name     = var.name_rg
-  location = var.location_rg
+resource "azurerm_resource_group" "lights_on_heights_aks_rg" {
+  name     = var.rg_name
+  location = var.rg_location
 }
 
 module "networking" {
@@ -12,12 +10,12 @@ module "networking" {
 
 resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
   name                = var.cluster_name
-  location            = var.location_rg
-  resource_group_name = var.name_rg
+  location            = azurerm_resource_group.lights_on_heights_aks_rg.location
+  resource_group_name = azurerm_resource_group.lights_on_heights_aks_rg.name
   dns_prefix          = var.cluster_dns_prefix
 
   default_node_pool {
-    name                = "aks-node-pool"
+    name                = "aksnp"
     node_count          = 3 # Initial node count
     vm_size             = "Standard_DS2_v2"
     vnet_subnet_id      = module.networking.subnet_id
@@ -35,6 +33,9 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
   network_profile {
     network_plugin = "azure"
     network_policy = "calico"
+    service_cidr       = "10.1.0.0/16"
+    dns_service_ip     = "10.1.0.10"
+    docker_bridge_cidr = "172.17.0.1/16"
   }
 
   oms_agent {
@@ -44,17 +45,7 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
 
 resource "azurerm_log_analytics_workspace" "lights_on_heights_log_analytics" {
   name                = "lights-on-heights-aks-logs"
-  location            = var.location_rg
-  resource_group_name = var.name_rg
+  location            = azurerm_resource_group.lights_on_heights_aks_rg.location
+  resource_group_name = azurerm_resource_group.lights_on_heights_aks_rg.name
   sku                 = var.log_analytics_workspace_sku
-}
-
-resource "azurerm_log_analytics_cluster" "lights_on_heights_log_analytics_cluster" {
-  name                = "lights-on-heights-analytics-cluster"
-  resource_group_name = var.name_rg
-  location            = var.location_rg
-
-  identity {
-    type = "SystemAssigned"
-  }
 }

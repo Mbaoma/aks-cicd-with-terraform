@@ -1,10 +1,10 @@
-variable "name_rg" {
+variable "rg_name" {
   type        = string
-  default     = "lights_on_heights_24"
+  default     = "lights_on_heights_aks_rg"
   description = "Resource group name for my assessment"
 }
 
-variable "location_rg" {
+variable "rg_location" {
   type        = string
   default     = "eastus"
   description = "Azure region to deploy resources"

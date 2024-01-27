@@ -2,11 +2,6 @@
 aks-cluster/.terraform
 aks-cluster/.terraform.lock.hcl
 
-modules/networking/.terraform
-modules/networking/.terraform.lock.hcl
-
-modules/resource-group/.terraform
-modules/resource-group/.terraform.lock.hcl
-
 az-storage/.terraform
 az-storage/.terraform.lock.hcl
+az-storage/terraform.tfstate
