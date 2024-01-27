@@ -45,8 +45,6 @@ jobs:
     - name: Terraform Validate
       run: terraform -chdir=aks-cluster/ validate
 
-    - name: Terraform Unlock
-      run: terraform force-unlock 6f263dea-5302-0b06-917b-f6e7205aad83
     - name: Terraform Plan
       run: terraform -chdir=aks-cluster/ plan -out=tfplan
 
