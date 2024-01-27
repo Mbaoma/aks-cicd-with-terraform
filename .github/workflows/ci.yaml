@@ -47,6 +47,8 @@ jobs:
 
     - name: Terraform Plan
       run: terraform -chdir=aks-cluster/ plan -out=tfplan
+      env:
+        TF_LOG: DEBUG
 
     - name: Terraform Apply
       run: terraform -chdir=aks-cluster/ apply "tfplan"
