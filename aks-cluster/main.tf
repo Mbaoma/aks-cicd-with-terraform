@@ -17,13 +17,13 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
   dns_prefix          = var.cluster_dns_prefix
 
   default_node_pool {
-    name            = "aks-node-pool"
-    node_count      = 3  # Initial node count
-    vm_size         = "Standard_DS2_v2"
-    vnet_subnet_id  = module.networking.subnet_id
-    enable_auto_scaling = true  # Enable cluster autoscaler
-    min_count       = 1  # Minimum number of nodes
-    max_count       = 5  # Maximum number of nodes
+    name                = "aks-node-pool"
+    node_count          = 3 # Initial node count
+    vm_size             = "Standard_DS2_v2"
+    vnet_subnet_id      = module.networking.subnet_id
+    enable_auto_scaling = true # Enable cluster autoscaler
+    min_count           = 1    # Minimum number of nodes
+    max_count           = 5    # Maximum number of nodes
   }
 
   role_based_access_control_enabled = true
@@ -37,9 +37,9 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
     network_policy = "calico"
   }
 
-    oms_agent {
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.lights_on_heights_log_analytics.id
-    }
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.lights_on_heights_log_analytics.id
+  }
 }
 
 resource "azurerm_log_analytics_workspace" "lights_on_heights_log_analytics" {
