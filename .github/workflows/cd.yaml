@@ -25,7 +25,7 @@ jobs:
       REGISTRY_NAME: lightsOnHeightsRegistry.azurecr.io
       IMAGE_NAME: fastapi-app
       SERVICE_PATH: code/
-      AKS_RESOURCE_GROUP: lights_on_heights_aks_rg # Set your AKS resource group
+      AKS_RESOURCE_GROUP: lights_on_heights_aks_rg
       AKS_CLUSTER_NAME: lights_on_heights_cluster
       K8S_DEPLOYMENT_FILE: code/k8s-config
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -83,21 +83,31 @@ jobs:
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v1
-
+    
     - name: Get AKS credentials
-      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/.kube/config
+      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --overwrite-existing
+    
+    - name: Set KUBECONFIG environment variable
+      run: echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+
+
+    # - name: Get AKS credentials
+    #   run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/.kube/config
+    #   env:
+    #     KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+
+    - name: Check kubectl context
+      run: |
+        kubectl config current-context
+         kubectl config get-contexts
       env:
         KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
 
     - name: Deploy to AKS
-      run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --record \nkubectl rollout status deployment/fastapi-app\n"
+      run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
       env:
         KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
-    
-    - name: Check kubectl context
-      run: kubectl config current-context
-      env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+
 
     # This optional step updates the Kubernetes deployment manifest with the new image.
     - name: Update deployment manifest
