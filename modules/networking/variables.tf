@@ -19,13 +19,13 @@ variable "vnet_name" {
 
 variable "vnet_address_space" {
   description = "Address space for the virtual network"
-  default     = ["10.0.0.0/16"]
+  default     = ["10.42.0.0/16"] #["10.0.0.0/16"]
   type        = list(string)
 }
 
 variable "dns_servers" {
   description = "Custom DNS servers for the virtual network"
-  default     = ["10.0.0.4", "10.0.0.5"]
+  default     = ["10.42.0.4", "10.42.0.5"] #["10.0.0.4", "10.0.0.5"]
   type        = list(string)
 }
 
@@ -43,6 +43,6 @@ variable "subnet_name" {
 
 variable "subnet_address_prefixes" {
   description = "Address prefix for the subnet"
-  default     = ["10.0.1.0/24"]
+  default     = ["10.42.1.0/24"] #["10.0.1.0/24"]
   type        = list(string)
 }
