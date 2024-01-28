@@ -68,7 +68,7 @@ oms_agent {
 role_based_access_control_enabled = true
 ```
 
-<img width="847" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/d7e2e0a4-f93b-4627-bed2-de3f5e16ce26">
+<img width="1440" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/4d074862-b732-47b7-8566-894fe96cdf99">
 
 <img width="917" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/757abb69-e99d-4bb0-91fc-3dbf589638cc">
 
