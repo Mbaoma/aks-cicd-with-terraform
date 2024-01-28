@@ -81,33 +81,36 @@ jobs:
 
     - name: Install kubectl
       uses: azure/setup-kubectl@v1
-    
-    - name: Set KUBECONFIG environment variable
-      run: echo "KUBECONFIG=$GITHUB_WORKSPACE/.kube/config" >> $GITHUB_ENV
 
+    - name: Set KUBECONFIG environment variable
+      run: echo "KUBECONFIG=/home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config" >> $GITHUB_ENV
 
     - name: Get AKS credentials
-      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/.kube/config --overwrite-existing
+      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config --overwrite-existing
       env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
 
-    - name: Check kubectl config file
-      run: cat $GITHUB_WORKSPACE/.kube/config
-      env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+        # After the 'Get AKS credentials' step
+    - name: Set KUBECONFIG environment variable
+      run: echo "KUBECONFIG=/home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config" >> $GITHUB_ENV
+
+    # - name: Print kubeconfig
+    #   run: cat $KUBECONFIG
+    #   env:
+    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
 
     - name: Check kubectl context
       run: |
         kubectl config view
         kubectl config current-context
-         kubectl config get-contexts
+        kubectl config get-contexts
       env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
 
     - name: Deploy to AKS
       run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
       env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
 
 
     # This optional step updates the Kubernetes deployment manifest with the new image.
@@ -116,4 +119,33 @@ jobs:
         sed -i 's|image: .*|image: ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|' ${{ env.K8S_DEPLOYMENT_FILE }}
         kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
       env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+
+
+    # # - name: Check kubectl config file
+    # #   run: cat /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+    # #   env:
+    # #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+    # - name: Check kubectl context
+    #   run: |
+    #     kubectl config view
+    #     kubectl config current-context
+    #      kubectl config get-contexts
+    #   env:
+    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+    # - name: Deploy to AKS
+    #   run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+    #   env:
+    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+
+    # # This optional step updates the Kubernetes deployment manifest with the new image.
+    # - name: Update deployment manifest
+    #   run: |
+    #     sed -i 's|image: .*|image: ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|' ${{ env.K8S_DEPLOYMENT_FILE }}
+    #     kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
+    #   env:
+    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
