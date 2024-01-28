@@ -47,24 +47,12 @@ resource "azurerm_virtual_network" "lights_on_heights_vnet" {
   dns_servers         = var.dns_servers
 }
 
-
-
 # Subnet Resource
 resource "azurerm_subnet" "lights_on_heights_subnet" {
   name                 = var.subnet_name
   resource_group_name  = module.resource_group.name
   virtual_network_name = azurerm_virtual_network.lights_on_heights_vnet.name
   address_prefixes     = var.subnet_address_prefixes
-
-  delegation {
-    name = "delegation"
-
-    service_delegation {
-      name    = "Microsoft.ContainerInstance/containerGroups"
-      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action", "Microsoft.Network/virtualNetworks/subnets/prepareNetworkPolicies/action"]
-    }
-  }
-
 }
 
 # Association between Subnet and Network Security Group
