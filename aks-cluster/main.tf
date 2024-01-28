@@ -33,12 +33,18 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
     type = "SystemAssigned"
   }
 
+  # network_profile {
+  #   network_plugin = "azure"
+  #   network_policy = "calico"
+  #   service_cidr       = "10.1.0.0/16"
+  #   dns_service_ip     = "10.1.0.10"
+  #   docker_bridge_cidr = "172.17.0.1/16"
+  # }
+
   network_profile {
-    network_plugin = "azure"
-    network_policy = "calico"
-    service_cidr       = "10.1.0.0/16"
-    dns_service_ip     = "10.1.0.10"
-    docker_bridge_cidr = "172.17.0.1/16"
+    network_plugin     = "azure"
+    network_policy     = "calico"
+    load_balancer_sku  = "standard"  # Standard load balancer for public IP
   }
 
   oms_agent {
