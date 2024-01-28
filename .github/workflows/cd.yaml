@@ -85,19 +85,16 @@ jobs:
       uses: azure/setup-kubectl@v1
     
     - name: Get AKS credentials
-      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --overwrite-existing
-    
+      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/.kube/config
+      env:
+        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+
     - name: Set KUBECONFIG environment variable
       run: echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
-
-    # - name: Get AKS credentials
-    #   run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file $GITHUB_WORKSPACE/.kube/config
-    #   env:
-    #     KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
-
     - name: Check kubectl context
       run: |
+        kubectl config view
         kubectl config current-context
          kubectl config get-contexts
       env:
