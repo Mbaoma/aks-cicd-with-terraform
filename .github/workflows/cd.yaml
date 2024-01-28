@@ -24,7 +24,7 @@ jobs:
     env:
       REGISTRY_NAME: lightsOnHeightsRegistry.azurecr.io
       IMAGE_NAME: fastapi-app
-      SERVICE_PATH: code/Dockerfile
+      SERVICE_PATH: code/
       AKS_RESOURCE_GROUP: lights_on_heights_aks_rg # Set your AKS resource group
       AKS_CLUSTER_NAME: lights_on_heights_cluster
       K8S_DEPLOYMENT_FILE: code/k8s-config
