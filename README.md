@@ -54,6 +54,8 @@ When setting up the cluster, the aim is to ensure scalability, high availability
 - Enable [oidc](https://learn.microsoft.com/en-us/azure/aks/use-oidc-issuer) on the Kubernetes Cluster
 - Authenticate GitHub Actions to [deploy](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust?pivots=identity-wif-apps-methods-azp) your Kubernetes manifests in clusters
 
+<img width="1440" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/f10d3cde-b3aa-48a9-a1be-e4143ade71c8">
+
 ## Monitoring
 - [Monitoring](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=terraform), is managed by agents - Azure Container Insights (in this case). I setup this agent using Terraform, however further configuration can be done in the Azure UI, to set what exact metrics to track and setup alerts.
 ```

@@ -13,31 +13,36 @@ on:
     paths:
     - 'code/**'
 
-env:
-  REGISTRY_NAME: lightsOnHeightsRegistry.azurecr.io
-  IMAGE_NAME: fastapi-app
-  SERVICE_PATH: code/Dockerfile
-  AKS_RESOURCE_GROUP: lights_on_heights_aks_rg # Set your AKS resource group
-  AKS_CLUSTER_NAME: lights_on_heights_cluster
-  K8S_DEPLOYMENT_FILE: code/k8s-config
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      REGISTRY_NAME: lightsOnHeightsRegistry.azurecr.io
+      IMAGE_NAME: fastapi-app
+      SERVICE_PATH: code/Dockerfile
+      AKS_RESOURCE_GROUP: lights_on_heights_aks_rg # Set your AKS resource group
+      AKS_CLUSTER_NAME: lights_on_heights_cluster
+      K8S_DEPLOYMENT_FILE: code/k8s-config
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+
     steps:
 
     - name: Checkout code
       uses: actions/checkout@v2
-    
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Replace with your Python version
+        python-version: '3.8' # Replace with your Python version
 
     - name: Install dependencies
       run: |
@@ -46,7 +51,7 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    
+
     - name: Lint with flake8
       run: |
         # Stop the build if there are Python syntax errors or undefined names
