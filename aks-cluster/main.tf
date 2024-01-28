@@ -24,6 +24,7 @@ resource "azurerm_kubernetes_cluster" "lights_on_heights_aks" {
   name                = var.cluster_name
   location            = azurerm_resource_group.lights_on_heights_aks_rg.location
   resource_group_name = azurerm_resource_group.lights_on_heights_aks_rg.name
+  dns_prefix          = var.cluster_dns_prefix
 
   default_node_pool {
     name                = "aksnp"
