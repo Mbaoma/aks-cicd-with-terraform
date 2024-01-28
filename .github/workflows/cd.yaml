@@ -93,6 +93,11 @@ jobs:
       run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} --record \nkubectl rollout status deployment/fastapi-app\n"
       env:
         KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
+    
+    - name: Check kubectl context
+      run: kubectl config current-context
+      env:
+        KUBECONFIG: $GITHUB_WORKSPACE/.kube/config
 
     # This optional step updates the Kubernetes deployment manifest with the new image.
     - name: Update deployment manifest
