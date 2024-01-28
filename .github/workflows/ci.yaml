@@ -1,0 +1,60 @@
+name: 'Setup AKS Cluster using Terraform'
+
+on:
+  pull_request:
+    branches:
+    - develop
+    paths:
+    - 'aks-cluster/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: 'Terraform initialization'
+    runs-on: ubuntu-latest
+
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Terraform Init
+      run: terraform -chdir=aks-cluster/ init
+    
+    # - name: Terraform Destroy
+    #   run: terraform destroy -auto-approve
+    #   env:
+    #     TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+
+    - name: Terraform Validate
+      run: terraform -chdir=aks-cluster/ validate
+
+
+    - name: Terraform Plan
+      run: terraform -chdir=aks-cluster/ plan -out=tfplan
+      # env:
+      #   TF_LOG: DEBUG
+
+    - name: Terraform Apply
+      run: terraform -chdir=aks-cluster/ apply -auto-approve "tfplan"

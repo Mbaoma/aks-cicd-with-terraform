@@ -1,0 +1,9 @@
+.vscode
+
+#terraform
+aks-cluster/.terraform
+aks-cluster/.terraform.lock.hcl
+
+az-storage/.terraform
+az-storage/.terraform.lock.hcl
+az-storage/terraform.tfstate
