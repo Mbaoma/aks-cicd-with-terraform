@@ -20,6 +20,7 @@ resource "azurerm_network_security_group" "lights_on_heights_sg" {
   location            = module.resource_group.location
   resource_group_name = module.resource_group.name
 
+  # Existing inbound rule
   security_rule {
     name                       = "allow-aks-required-inbound"
     priority                   = 100
@@ -27,9 +28,22 @@ resource "azurerm_network_security_group" "lights_on_heights_sg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges    = ["80", "443", "22"]
+    destination_port_ranges    = ["80", "443", "22", "53"]
     source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
+  }
+
+  # Example outbound rule to allow all outbound traffic
+  security_rule {
+    name                       = "allow-all-outbound"
+    priority                   = 101
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
   }
 }
 

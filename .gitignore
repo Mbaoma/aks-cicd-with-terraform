@@ -1,3 +1,5 @@
+.vscode
+
 #terraform
 aks-cluster/.terraform
 aks-cluster/.terraform.lock.hcl

@@ -49,9 +49,28 @@ When setting up the cluster, the aim is to ensure scalability, high availability
 - Create [secrets](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux) to give [Terraform](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret.html) permission to access your Azure account.
 
 - I have 2 files ```ci.yaml``` and ```cd.yaml``` for continuous integration (setup infrastructure using terraform), and continuous deployment (update AKS cluster with services).
-I manage the order of workflow execution by setting up a dependency between the two workflow files using the ```workflow_run``` event in ```cd.yaml```.
 
 ## Kubernetes Deployment
+- Enable [oidc](https://learn.microsoft.com/en-us/azure/aks/use-oidc-issuer) on the Kubernetes Cluster
+- Authenticate GitHub Actions to [deploy](https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation-create-trust?pivots=identity-wif-apps-methods-azp) your Kubernetes manifests in clusters
+
+## Monitoring
+- [Monitoring](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=terraform), is managed by agents - Azure Container Insights (in this case). I setup this agent using Terraform, however further configuration can be done in the Azure UI, to set what exact metrics to track and setup alerts.
+```
+oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.lights_on_heights_log_analytics.id
+  }
+```
+- RBAC, was setup, using Terraform to limit who has access to the cluster.
+```
+role_based_access_control_enabled = true
+```
+
+<img width="847" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/d7e2e0a4-f93b-4627-bed2-de3f5e16ce26">
+
+<img width="917" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/757abb69-e99d-4bb0-91fc-3dbf589638cc">
+
+<img width="1440" alt="image" src="https://github.com/Mbaoma/aks-cicd-with-terraform/assets/49791498/7ae16a18-1f55-4be8-a747-7c2207762fa0">
 
 ## Challenges
-- I struggled with granting permission to Terraform to authenticate to Azure via GitHub actions
+- I struggled with granting permission to Terraform to authenticate to Azure via GitHub actions but resolved it by reading documentation and checking StackOverflow.

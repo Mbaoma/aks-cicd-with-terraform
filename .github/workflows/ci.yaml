@@ -40,10 +40,11 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Terraform Init
-      run: terraform -chdir=aks-cluster/ init
+      run: terraform -chdir=aks-cluster/ init 
 
     - name: Terraform Validate
       run: terraform -chdir=aks-cluster/ validate
+
 
     - name: Terraform Plan
       run: terraform -chdir=aks-cluster/ plan -out=tfplan

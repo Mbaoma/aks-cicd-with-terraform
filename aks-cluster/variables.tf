@@ -45,3 +45,9 @@ variable "log_analytics_workspace_sku" {
   default     = "PerGB2018"
   type        = string
 }
+
+variable "acr_registry_name"{
+  description = "Name of the Azure Container Registry"
+  default     = "lightsOnHeightsRegistry"
+  type        = string
+}
