@@ -28,7 +28,7 @@ resource "azurerm_network_security_group" "lights_on_heights_sg" {
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_ranges    = ["80", "443", "22", "53"]
+    destination_port_ranges    = ["80", "443", "22", "53", "9000"]
     source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "VirtualNetwork"
   }
