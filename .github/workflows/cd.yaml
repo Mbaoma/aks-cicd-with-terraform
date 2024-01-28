@@ -1,0 +1,107 @@
+name: Deploy a Manifest to the AKS Cluster
+
+# on:
+#   workflow_run:
+#     workflows: ["Continuous Integration"]
+#     types:
+#       - completed
+
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - 'code/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY_NAME: lightsonheightsregistry.azurecr.io
+      IMAGE_NAME: fastapi-app
+      SERVICE_PATH: code/
+      AKS_RESOURCE_GROUP: lights_on_heights_aks_rg
+      AKS_CLUSTER_NAME: lights_on_heights_cluster
+      K8S_DEPLOYMENT_FILE: code/k8s-config
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8' # Replace with your Python version
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f code/requirements.txt ]; then pip install -r code/requirements.txt; fi
+
+
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 code/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 code/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Test with pytest
+      run: |
+        cd code
+        pytest
+
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Build Docker image
+      run: docker build -t ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.SERVICE_PATH }}
+
+    - name: Azure Container Registry Login
+      run: echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ env.REGISTRY_NAME }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+    - name: Push Docker image to ACR
+      run: docker push ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v1
+
+    - name: Set KUBECONFIG environment variable
+      run: echo "KUBECONFIG=/home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config" >> $GITHUB_ENV
+
+    - name: Get AKS credentials
+      run: az aks get-credentials --resource-group ${{ env.AKS_RESOURCE_GROUP }} --name ${{ env.AKS_CLUSTER_NAME }} --file /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config --overwrite-existing
+      env:
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+        # After the 'Get AKS credentials' step
+    - name: Set KUBECONFIG environment variable
+      run: echo "KUBECONFIG=/home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config" >> $GITHUB_ENV
+
+    - name: Apply Kubernetes manifest
+      run: kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
+      env:
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
+
+    - name: Deploy to AKS
+      run: |
+        kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        kubectl rollout status deployment/fastapi-app
+      env:
+        KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config

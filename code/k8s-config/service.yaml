@@ -1,0 +1,27 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: fastapi-service
+# spec:
+#   # type: NodePort
+#   type: LoadBalancer
+#   selector:
+#     app: fastapi-app
+#   ports:
+#     - protocol: TCP
+#       port: 8000
+#       targetPort: 8000
+#       # nodePort: 31000  # Optional: If you don't specify this, Kubernetes will choose a port for you.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: fastapi-app
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
