@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REGISTRY_NAME: lightsOnHeightsRegistry.azurecr.io
+      REGISTRY_NAME: lightsonheightsregistry.azurecr.io
       IMAGE_NAME: fastapi-app
       SERVICE_PATH: code/
       AKS_RESOURCE_GROUP: lights_on_heights_aks_rg
@@ -93,7 +93,7 @@ jobs:
         # After the 'Get AKS credentials' step
     - name: Set KUBECONFIG environment variable
       run: echo "KUBECONFIG=/home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config" >> $GITHUB_ENV
-    
+
     - name: Apply Kubernetes manifest
       run: kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
       env:
@@ -105,35 +105,3 @@ jobs:
         kubectl rollout status deployment/fastapi-app
       env:
         KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
-
-    # - name: Print kubeconfig
-    #   run: cat $KUBECONFIG
-    #   env:
-    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
-
-    # - name: Check kubectl context
-    #   run: |
-    #     kubectl config view
-    #     kubectl config current-context
-    #     kubectl config get-contexts
-    #   env:
-    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
-    
-    # - name: Apply Kubernetes manifest
-    #   run: kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
-    #   env:
-    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
-
-    # - name: Deploy to AKS
-    #   run: "kubectl set image deployment/fastapi-app fastapi-app=${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-    #   env:
-    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
-
-
-    # # This optional step updates the Kubernetes deployment manifest with the new image.
-    # - name: Update deployment manifest
-    #   run: |
-    #     sed -i 's|image: .*|image: ${{ env.REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|' ${{ env.K8S_DEPLOYMENT_FILE }}
-    #     kubectl apply -f ${{ env.K8S_DEPLOYMENT_FILE }}
-    #   env:
-    #     KUBECONFIG: /home/runner/work/aks-cicd-with-terraform/aks-cicd-with-terraform/.kube/config
