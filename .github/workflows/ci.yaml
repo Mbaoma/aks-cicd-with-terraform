@@ -42,10 +42,10 @@ jobs:
     - name: Terraform Init
       run: terraform -chdir=aks-cluster/ init
     
-    - name: Terraform Destroy
-      run: terraform destroy -auto-approve
-      env:
-        TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
+    # - name: Terraform Destroy
+    #   run: terraform destroy -auto-approve
+    #   env:
+    #     TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
 
     - name: Terraform Validate
       run: terraform -chdir=aks-cluster/ validate
